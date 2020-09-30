@@ -1,1 +1,2 @@
-# Sychev_VK_Java_Liga
+- [x] lesson2
+- [ ] lesson3
