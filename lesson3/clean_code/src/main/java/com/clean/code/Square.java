@@ -1,36 +1,58 @@
 package com.clean.code;
 
-public class Square implements Shape3D {
-    private Double x;
-    private Double y;
+/**
+ * Класс квадрата, имплементирует интерфейс {@link Shape2D}
+ */
+public class Square implements Shape2D {
+    /**
+     * Координата X центра квадрата
+     */
+    private Double centerX;
+    /**
+     * Координата Y центра квадрата
+     */
+    private Double centerY;
+    /**
+     * Размер стороны квадрата
+     */
     private Double edgeSize;
-    public Square(Double x, Double y, Double edgeSize) {
-        this.x = x;
-        this.y = y;
+
+    /**
+     * Конструктор со всеми полями
+     *
+     * @param centerX координата X центра квадрата
+     * @param centerY координата Y центра квадрата
+     * @param edgeSize размер стороны квадрата
+     */
+    public Square(Double centerX, Double centerY, Double edgeSize) {
+        this.centerX = centerX;
+        this.centerY = centerY;
         this.edgeSize = edgeSize;
     }
 
-    @Override
-    public Double getX() {
-        return x;
-    }
-
-    @Override
-    public Double getY() {
-        return y;
-    }
-
-    @Override
-    public Double getZ() {
-        return null;
-    }
-
-    @Override
-    public Double getVolume() {
-        return null;
-    }
-
+    /**
+     * Нахождение периметра квадрата
+     *
+     * @return Double периметр квадрата
+     */
     public Double getPerimeter() {
         return edgeSize * edgeSize;
+    }
+
+    /**
+     * Возвращает координату X центра квадрата
+     *
+     * @return Double координата X центра квадрата
+     */
+    public Double getX() {
+        return centerX;
+    }
+    /**
+     * Возвращает координату Y центра квадрата
+     *
+     * @return Double координата Y центра квадрата
+     */
+    public Double getY() {
+        return centerY;
     }
 }
