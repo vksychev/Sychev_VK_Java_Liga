@@ -31,11 +31,11 @@ public class Square implements Shape2D {
     }
 
     /**
-     * Нахождение периметра квадрата
+     * Нахождение площади квадрата
      *
-     * @return Double периметр квадрата
+     * @return Double площадь квадрата
      */
-    public Double getPerimeter() {
+    public Double getArea() {
         return edgeSize * edgeSize;
     }
 

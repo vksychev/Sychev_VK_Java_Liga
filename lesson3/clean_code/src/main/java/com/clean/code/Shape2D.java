@@ -5,9 +5,9 @@ package com.clean.code;
  */
 public interface Shape2D {
     /**
-     * Нахождение периметра двумерной фигуры
+     * Нахождение площади двумерной фигуры
      * 
-     * @return Double периметр двумерной фигуры
+     * @return Double площадь двумерной фигуры
      */
-    Double getPerimeter();
+    Double getArea();
 }

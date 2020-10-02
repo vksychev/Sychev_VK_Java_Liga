@@ -13,7 +13,7 @@ public class CleanCode {
         System.out.println("Qube volume: " + qube.getVolume());
 
         Shape2D square = new Square(1d, 1d, 5d);
-        System.out.println("Square perimeter: " + square.getPerimeter());
+        System.out.println("Square area: " + square.getArea());
     }
 
 }
