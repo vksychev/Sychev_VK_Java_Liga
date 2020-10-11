@@ -1,2 +1,4 @@
 - [x] lesson2
-- [ ] lesson3
+- [x] lesson3
+- [ ] lesson4
+- [ ] lesson5
