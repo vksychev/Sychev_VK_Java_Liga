@@ -1,6 +1,7 @@
 package ru.vksychev.cart.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -32,21 +33,27 @@ public class OrderDaoJdbc implements OrderDao {
      * @return созданный заказ
      */
     public Order createOrder(Order order) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        int affectedRows = jdbcTemplate.update(connection -> {
-                    PreparedStatement ps = connection.prepareStatement(INSERT_ORDER_SQL, Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, order.getName());
-                    ps.setInt(2, order.getPrice());
-                    ps.setInt(3, order.getCustomerId());
-                    return ps;
-                }, keyHolder
-        );
-        if (affectedRows < 0) {
+        try {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            int affectedRows = jdbcTemplate.update(connection -> {
+                        PreparedStatement ps = connection.prepareStatement(INSERT_ORDER_SQL, Statement.RETURN_GENERATED_KEYS);
+                        ps.setString(1, order.getName());
+                        ps.setInt(2, order.getPrice());
+                        ps.setInt(3, order.getCustomerId());
+                        return ps;
+                    }, keyHolder
+            );
+
+            if (affectedRows <= 0) {
+                return null;
+            }else {
+                order.setId(keyHolder.getKey().intValue());
+                return order;
+            }
+        } catch (DataIntegrityViolationException e){
+
             return null;
         }
-
-        order.setId(keyHolder.getKey().intValue());
-        return order;
     }
 }

@@ -16,9 +16,15 @@ import static org.mockito.Mockito.verify;
 
 public class OrderControllerTest {
 
+    /**
+     * Mock объект OrderController
+     */
     @Mock
     OrderController orderController;
 
+    /**
+     * Инициализация mock объектов
+     */
     @BeforeEach
     public void init(){
         MockitoAnnotations.initMocks(this);
@@ -26,7 +32,7 @@ public class OrderControllerTest {
 
     @Test
     @DisplayName("Создание заказа - корректный вызов")
-    public void createOrderTestOk(){
+    public void createOrderOkTest(){
         Order order = new Order(null, "name", 11, 1);
         Mockito.when(orderController.createOrder(order)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(order));
 

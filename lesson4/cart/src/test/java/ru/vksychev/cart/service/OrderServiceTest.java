@@ -13,9 +13,16 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class OrderServiceTest {
+
+    /**
+     * Mock объект OrderService
+     */
     @Mock
     private OrderService mockService;
 
+    /**
+     * Инициализация mock объектов
+     */
     @BeforeEach
     public void init(){
         MockitoAnnotations.initMocks(this);
@@ -26,8 +33,8 @@ public class OrderServiceTest {
     public void createOrderTestOk(){
         Order order = new Order(null, "name", 11, 1);
         Mockito.when(mockService.createOrder(order)).thenReturn(order);
-
         Order currentOrder = mockService.createOrder(order);
+
         Assertions.assertEquals(currentOrder.getName(),order.getName());
         Assertions.assertEquals(currentOrder.getPrice(),order.getPrice());
         Assertions.assertEquals(currentOrder.getCustomerId(),order.getCustomerId());

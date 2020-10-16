@@ -12,7 +12,7 @@ import ru.vksychev.cart.service.OrderService;
 
 
 /**
- *  REST контроллер для обработки заказов
+ * REST контроллер для обработки заказов
  */
 @RestController
 public class OrderController {
@@ -26,6 +26,7 @@ public class OrderController {
 
     /**
      * Обработка post запроса по созданию заказа
+     * При неудачном формировании заказа возвращает null
      *
      * @param order данные о заказе
      * @return Json с ответом о созданном заказе
@@ -33,9 +34,11 @@ public class OrderController {
     @RequestMapping(value = "/api/v1/order", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         Order currentOrder = orderService.createOrder(order);
-        if(currentOrder == null){
-            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        if (currentOrder == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(currentOrder);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(currentOrder);
     }
+
 }
