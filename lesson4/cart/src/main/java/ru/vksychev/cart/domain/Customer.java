@@ -1,14 +1,17 @@
 package ru.vksychev.cart.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 /**
  * Класс покупателя
  */
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer {
@@ -22,10 +25,12 @@ public class Customer {
     /**
      * Имя покупателя
      */
+    @NonNull
     private String name;
 
     /**
      * Email покупателя
      */
+    @NonNull
     private String email;
 }

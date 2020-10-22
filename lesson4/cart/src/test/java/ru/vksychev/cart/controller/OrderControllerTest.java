@@ -7,9 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import ru.vksychev.cart.domain.Order;
+import ru.vksychev.cart.dto.OrderDto;
+import ru.vksychev.cart.service.OrderService;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -20,7 +19,7 @@ public class OrderControllerTest {
      * Mock объект OrderController
      */
     @Mock
-    OrderController orderController;
+    OrderService mockOrderService;
 
     /**
      * Инициализация mock объектов
@@ -33,10 +32,10 @@ public class OrderControllerTest {
     @Test
     @DisplayName("Создание заказа - корректный вызов")
     public void createOrderOkTest(){
-        Order order = new Order(null, "name", 11, 1);
-        Mockito.when(orderController.createOrder(order)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(order));
+        OrderDto order = new OrderDto(null,"order", 10, 1);
+        Mockito.when(mockOrderService.createOrder(order)).thenReturn(order);
+        mockOrderService.createOrder(order);
 
-        Assertions.assertEquals(orderController.createOrder(order),ResponseEntity.status(HttpStatus.OK).body(order));
-        verify(orderController, times(1)).createOrder(order);
+        verify(mockOrderService, times(1)).createOrder(order);
     }
 }

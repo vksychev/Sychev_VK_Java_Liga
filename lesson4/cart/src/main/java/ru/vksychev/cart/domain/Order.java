@@ -1,15 +1,18 @@
 package ru.vksychev.cart.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 
 /**
  * Класс заказа
  */
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
@@ -22,15 +25,18 @@ public class Order {
     /**
      * Название заказа
      */
+    @NonNull
     private String name;
 
     /**
      * Цена заказа
      */
+    @NonNull
     private Integer price;
 
     /**
      * ID покупателя
      */
-    private Integer customerId;
+    @NonNull
+    private Customer customer;
 }

@@ -1,13 +1,13 @@
 package ru.vksychev.cart.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.vksychev.cart.domain.Order;
+import ru.vksychev.cart.dto.OrderDto;
 import ru.vksychev.cart.service.OrderService;
 
 
@@ -15,30 +15,24 @@ import ru.vksychev.cart.service.OrderService;
  * REST контроллер для обработки заказов
  */
 @RestController
+@RequestMapping("api/v1/order")
+@RequiredArgsConstructor
 public class OrderController {
 
 
-    final OrderService orderService;
-
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    private final OrderService orderService;
 
     /**
      * Обработка post запроса по созданию заказа
      * При неудачном формировании заказа возвращает null
      *
-     * @param order данные о заказе
+     * @param orderDto данные о заказе
      * @return Json с ответом о созданном заказе
      */
-    @RequestMapping(value = "/api/v1/order", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order currentOrder = orderService.createOrder(order);
-        if (currentOrder == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body(currentOrder);
-        }
+    @PostMapping
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) {
+        OrderDto currentOrder = orderService.createOrder(orderDto);
+        return ResponseEntity.status(HttpStatus.OK).body(currentOrder);
     }
 
 }

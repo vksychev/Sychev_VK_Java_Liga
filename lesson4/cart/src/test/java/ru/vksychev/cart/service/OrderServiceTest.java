@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import ru.vksychev.cart.domain.Order;
+import ru.vksychev.cart.dao.OrderDao;
+import ru.vksychev.cart.dto.OrderDto;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,26 +19,22 @@ public class OrderServiceTest {
      * Mock объект OrderService
      */
     @Mock
-    private OrderService mockService;
+    private OrderDao mockDao;
 
     /**
      * Инициализация mock объектов
      */
     @BeforeEach
-    public void init(){
+    public void init() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
     @DisplayName("Создание заказа - корректный вызов")
-    public void createOrderTestOk(){
-        Order order = new Order(null, "name", 11, 1);
-        Mockito.when(mockService.createOrder(order)).thenReturn(order);
-        Order currentOrder = mockService.createOrder(order);
-
-        Assertions.assertEquals(currentOrder.getName(),order.getName());
-        Assertions.assertEquals(currentOrder.getPrice(),order.getPrice());
-        Assertions.assertEquals(currentOrder.getCustomerId(),order.getCustomerId());
-        verify(mockService, times(1)).createOrder(order);
+    public void createOrderTestOk() {
+        OrderDto order = new OrderDto(null,"order", 10, 1);
+        Mockito.when(mockDao.createOrder(order)).thenReturn(order);
+        mockDao.createOrder(order);
+        verify(mockDao, times(1)).createOrder(order);
     }
 }

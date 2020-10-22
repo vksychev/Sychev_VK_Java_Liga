@@ -8,11 +8,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.matchers.Or;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import ru.vksychev.cart.domain.Order;
+import ru.vksychev.cart.dto.OrderDto;
 
 import javax.annotation.Resource;
 
@@ -22,24 +24,19 @@ import static org.mockito.Mockito.verify;
 
 public class OrderDaoJdbcTest {
 
-    /**
-     * Mock объект OrderDaoJdbc
-     */
-    @Mock
-    private OrderDaoJdbc orderDao;
+    private OrderDao orderDao;
 
-    /**
-     * Mock объект JdbcTemplate
-     */
     @Mock
     private JdbcTemplate jdbcTemplate;
+    @Mock
+    private GeneratedKeyHolder keyHolder;
 
     /**
      * OrderDaoJdbc с внедренным mock jdbcTemplate
      */
     @InjectMocks
     @Resource
-    private OrderDaoJdbc orderDaoTemplateMock;
+    private OrderDao orderDaoTemplateMock;
 
     /**
      * Инициализация mock объектов
@@ -47,40 +44,59 @@ public class OrderDaoJdbcTest {
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
+        orderDao = new OrderDao(jdbcTemplate, keyHolder);
     }
 
     @Test
     @DisplayName("Создание заказа - корректный вызов")
     public void createOrderOkTest() {
-        Order order = new Order(null, "name", 11, 1);
-        Mockito.when(orderDao.createOrder(order))
-                .thenReturn(order);
-        Order currentOrder = orderDao.createOrder(order);
+        OrderDto order = new OrderDto(null,"order", 10, 1);
+        OrderDto resultOrder = new OrderDto(1,"order", 10, 1);
 
-        Assertions.assertEquals(currentOrder.getName(), order.getName());
-        Assertions.assertEquals(currentOrder.getPrice(), order.getPrice());
-        Assertions.assertEquals(currentOrder.getCustomerId(), order.getCustomerId());
-        verify(orderDao, times(1)).createOrder(order);
+        Mockito.when(jdbcTemplate.update(any(PreparedStatementCreator.class), any(KeyHolder.class)))
+                .thenReturn(1);
+
+        Mockito.when(keyHolder.getKey())
+                .thenReturn(1);
+
+        Assertions.assertEquals(resultOrder,orderDao.createOrder(order));
+        verify(jdbcTemplate,
+                times(1)).update(any(PreparedStatementCreator.class), any(KeyHolder.class));
+        verify(keyHolder, times(1)).getKey();
     }
 
     @Test
-    @DisplayName("Создание заказа - не создалось без исключения")
-    public void createOrderAffectedZeroTest() {
-        Order order = new Order(null, "name", 11, 1);
+    @DisplayName("Создание заказа - неудачная попытка создать заказ")
+    public void createOrderFailTest() {
+        OrderDto order = new OrderDto(null,"order", 10, 1);
+
         Mockito.when(jdbcTemplate.update(any(PreparedStatementCreator.class), any(KeyHolder.class)))
                 .thenReturn(0);
 
-        Assertions.assertNull(orderDaoTemplateMock.createOrder(order));
+        Mockito.when(keyHolder.getKey())
+                .thenReturn(1);
+
+        OrderDto resultOrder = orderDao.createOrder(order);
+
+        Assertions.assertEquals(null , resultOrder.getId());
+        Assertions.assertEquals(order , resultOrder);
+        verify(jdbcTemplate,
+                times(1)).update(any(PreparedStatementCreator.class), any(KeyHolder.class));
+        verify(keyHolder, times(0)).getKey();
     }
 
     @Test
-    @DisplayName("Создание заказа - исключение при попытке создать запись")
+    @DisplayName("Создание заказа - исключение при попытке создать заказ")
     public void createOrderThrowsExceptionTest() {
-        Order order = new Order(null, "name", 11, 1);
+        OrderDto order = new OrderDto(null ,"order", 10, 1);
         Mockito.when(jdbcTemplate.update(any(PreparedStatementCreator.class), any(KeyHolder.class)))
                 .thenThrow(DataIntegrityViolationException.class);
 
-        Assertions.assertNull(orderDaoTemplateMock.createOrder(order));
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> orderDao.createOrder(order));
+
+        verify(jdbcTemplate,
+                times(1)).update(any(PreparedStatementCreator.class), any(KeyHolder.class));
+        verify(keyHolder, times(0)).getKey();
     }
 
 }
