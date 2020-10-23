@@ -15,11 +15,13 @@ import static org.mockito.Mockito.verify;
 
 public class OrderServiceTest {
 
+
+    OrderService orderService;
     /**
      * Mock объект OrderService
      */
     @Mock
-    private OrderDao mockDao;
+    OrderDao mockDao;
 
     /**
      * Инициализация mock объектов
@@ -27,6 +29,7 @@ public class OrderServiceTest {
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
+        orderService = new OrderService(mockDao);
     }
 
     @Test
@@ -34,7 +37,8 @@ public class OrderServiceTest {
     public void createOrderTestOk() {
         OrderDto order = new OrderDto(null,"order", 10, 1);
         Mockito.when(mockDao.createOrder(order)).thenReturn(order);
-        mockDao.createOrder(order);
+        orderService.createOrder(order);
+        
         verify(mockDao, times(1)).createOrder(order);
     }
 }

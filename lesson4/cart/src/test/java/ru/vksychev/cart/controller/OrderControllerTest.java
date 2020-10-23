@@ -15,6 +15,8 @@ import static org.mockito.Mockito.verify;
 
 public class OrderControllerTest {
 
+
+    OrderController orderController;
     /**
      * Mock объект OrderController
      */
@@ -27,6 +29,7 @@ public class OrderControllerTest {
     @BeforeEach
     public void init(){
         MockitoAnnotations.initMocks(this);
+        orderController = new OrderController(mockOrderService);
     }
 
     @Test
@@ -34,7 +37,7 @@ public class OrderControllerTest {
     public void createOrderOkTest(){
         OrderDto order = new OrderDto(null,"order", 10, 1);
         Mockito.when(mockOrderService.createOrder(order)).thenReturn(order);
-        mockOrderService.createOrder(order);
+        orderController.createOrder(order);
 
         verify(mockOrderService, times(1)).createOrder(order);
     }
