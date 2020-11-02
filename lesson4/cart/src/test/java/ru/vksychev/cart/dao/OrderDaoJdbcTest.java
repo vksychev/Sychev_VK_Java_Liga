@@ -32,13 +32,6 @@ public class OrderDaoJdbcTest {
     private GeneratedKeyHolder keyHolder;
 
     /**
-     * OrderDaoJdbc с внедренным mock jdbcTemplate
-     */
-    @InjectMocks
-    @Resource
-    private OrderDao orderDaoTemplateMock;
-
-    /**
      * Инициализация mock объектов
      */
     @BeforeEach
