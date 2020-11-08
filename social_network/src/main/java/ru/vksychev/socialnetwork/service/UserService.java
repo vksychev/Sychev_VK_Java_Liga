@@ -58,11 +58,11 @@ public class UserService {
      */
     public Page<UserListDto> findFriends(UUID id, Pageable pageable) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
-        List<User> users = user.getFriends();
-        return new PageImpl<>(users
+        List<UserListDto> users = user.getFriends()
                 .stream()
                 .map(this::convertToListDto)
-                .collect(Collectors.toList()), pageable, users.size());
+                .collect(Collectors.toList());
+        return new PageImpl<>(users, pageable, users.size());
     }
 
     /**
