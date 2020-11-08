@@ -1,0 +1,8 @@
+package ru.vksychev.socialnetwork.exception;
+
+public class UserNotFoundException extends RuntimeException {
+
+    public UserNotFoundException(String errorMessage) {
+        super(errorMessage);
+    }
+}
