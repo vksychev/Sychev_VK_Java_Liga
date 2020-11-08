@@ -117,6 +117,7 @@ public class UserService {
      * @param id идентификатор пользователя
      * @return id удаленного пользователя
      */
+    @Transactional
     public UUID delete(UUID id) {
         if (id != null && userRepository.existsById(id)) {
             userRepository.deleteById(id);
