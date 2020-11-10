@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.vksychev.socialnetwork.domain.User;
+import ru.vksychev.socialnetwork.dto.AddFriendDto;
 import ru.vksychev.socialnetwork.dto.UserEditDto;
 import ru.vksychev.socialnetwork.dto.UserListDto;
 import ru.vksychev.socialnetwork.exception.UserNotFoundException;
@@ -81,17 +82,21 @@ public class UserService {
     /**
      * Добавление пользователя в друзья
      *
-     * @param id       идентификатор пользователя
-     * @param friendId идентификатор друга
+     * @param id     идентификатор пользователя
+     * @param target информация о новой дружбе
      * @return id друга
      */
     @Transactional
-    public UUID addFriend(UUID id, UUID friendId) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
-        User friend = userRepository.findById(friendId).orElseThrow(() -> new UserNotFoundException("User not found"));
+    public UUID addFriend(UUID id, AddFriendDto target) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        User friend = userRepository.findById(target.getTargetId())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         user.getFriends().add(friend);
+        friend.getFriends().add(user);
         userRepository.save(user);
-        return friendId;
+        userRepository.save(friend);
+        return target.getTargetId();
     }
 
     /**
@@ -139,6 +144,8 @@ public class UserService {
             User friend = userRepository.findById(targetId).orElseThrow(() -> new UserNotFoundException("User not found"));
             user.getFriends().remove(friend);
             userRepository.save(user);
+            friend.getFriends().remove(user);
+            userRepository.save(friend);
         }
         return targetId;
     }

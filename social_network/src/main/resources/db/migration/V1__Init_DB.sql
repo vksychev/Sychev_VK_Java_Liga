@@ -1,12 +1,12 @@
 create table usr
 (
-    id         uuid          not null,
-    first_name varchar(250)  not null,
-    last_name  varchar(250)  not null,
-    birthday   date          not null,
-    city       varchar(250)  not null,
-    sex        int2          not null,
-    interests  varchar(2500) not null,
+    id         uuid         not null,
+    first_name varchar(250) not null,
+    last_name  varchar(250) not null,
+    birthday   date         not null,
+    city       varchar(250),
+    sex        smallint,
+    interests  varchar(2500),
     primary key (id)
 );
 

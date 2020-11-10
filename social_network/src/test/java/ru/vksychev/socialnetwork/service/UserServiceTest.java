@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import ru.vksychev.socialnetwork.domain.User;
+import ru.vksychev.socialnetwork.dto.AddFriendDto;
 import ru.vksychev.socialnetwork.dto.UserEditDto;
 import ru.vksychev.socialnetwork.dto.UserListDto;
 import ru.vksychev.socialnetwork.repository.UserRepository;
@@ -62,7 +63,6 @@ public class UserServiceTest {
         for (int i = 0; i < userListDtos.size(); i++) {
             UserUtils.assertEquals(users.get(i), userListDtos.get(i));
         }
-
         Assertions.assertEquals(userListDtos.size(), 2);
         verify(repository, times(1)).findAll(any(Specification.class), any(Pageable.class));
     }
@@ -119,12 +119,12 @@ public class UserServiceTest {
         Mockito.when(repository.findById(user.getId())).thenReturn(Optional.of(user));
         Mockito.when(repository.findById(friend.getId())).thenReturn(Optional.of(friend));
         Mockito.when(repository.save(any(User.class))).thenReturn(user);
-        UUID friendId = userService.addFriend(user.getId(), friend.getId());
+        UUID friendId = userService.addFriend(user.getId(), new AddFriendDto(friend.getId()));
 
 
         Assertions.assertEquals(friendId, friend.getId());
         assertThat(user.getFriends(), hasItems(friend));
-        verify(repository, times(1)).save(any(User.class));
+        verify(repository, times(2)).save(any(User.class));
         verify(repository, times(1)).findById(user.getId());
         verify(repository, times(1)).findById(friend.getId());
     }
@@ -165,7 +165,7 @@ public class UserServiceTest {
         Mockito.when(repository.save(any(User.class))).thenReturn(user);
 
         Assertions.assertEquals(userService.deleteFriend(user.getId(), friend.getId()), friend.getId());
-        verify(repository, times(1)).save(any(User.class));
+        verify(repository, times(2)).save(any(User.class));
         verify(repository, times(1)).findById(user.getId());
         verify(repository, times(1)).findById(friend.getId());
     }

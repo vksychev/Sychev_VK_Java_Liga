@@ -105,12 +105,13 @@ public class UserControllerIntegrationTest {
     @Test
     @Sql("BeforeFindAll.sql")
     @DisplayName("Добавление друга - корректный вызов")
-    void addFriend() throws Exception {
+    void addFriendOK() throws Exception {
         UUID userId = createUser(UserUtils.generateUserEditDto());
         UUID friendId = createUser(UserUtils.generateUserEditDto());
 
-        mockMvc.perform(post("/users/{userId}/friends?targetId={friendId}", userId, friendId)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/users/{userId}/friends", userId, friendId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"targetId\" : \"" + friendId + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("\"" + friendId + "\""));
 
@@ -122,12 +123,18 @@ public class UserControllerIntegrationTest {
         UUID userId = createUser(UserUtils.generateUserEditDto());
         UUID friendId = createUser(UserUtils.generateUserEditDto());
 
-        mockMvc.perform(post("/users/{userId}/friends?targetId={friendId}", userId, friendId)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/users/{userId}/friends", userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"targetId\" : \"" + friendId + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("\"" + friendId + "\""));
 
         mockMvc.perform(get("/users/{userId}/friends", userId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.numberOfElements").value(1));
+
+        mockMvc.perform(get("/users/{userId}/friends", friendId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.numberOfElements").value(1));
@@ -138,6 +145,11 @@ public class UserControllerIntegrationTest {
                 .andExpect(content().string("\"" + friendId + "\""));
 
         mockMvc.perform(get("/users/{userId}/friends", userId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.numberOfElements").value(0));
+
+        mockMvc.perform(get("/users/{userId}/friends", friendId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.numberOfElements").value(0));
@@ -156,6 +168,7 @@ public class UserControllerIntegrationTest {
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(response));
+
         mockMvc.perform(put("/users/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
@@ -173,6 +186,7 @@ public class UserControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(response));
+
         mockMvc.perform(delete("/users/{id}", userId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -185,8 +199,9 @@ public class UserControllerIntegrationTest {
         UUID userId = createUser(UserUtils.generateUserEditDto());
         UUID friendId = createUser(UserUtils.generateUserEditDto());
 
-        mockMvc.perform(post("/users/{userId}/friends?targetId={friendId}", userId, friendId)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/users/{userId}/friends", userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"targetId\" : \"" + friendId + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("\"" + friendId + "\""));
 
@@ -199,7 +214,6 @@ public class UserControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("\"" + friendId + "\""));
-
     }
 
     @Test
@@ -213,13 +227,14 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Удаление пользователя с друзьями - корректный вызов")
+    @DisplayName("Удаление пользователя, у которого есть друзья - корректный вызов")
     void deleteUserWithFriends() throws Exception {
         UUID userId = createUser(UserUtils.generateUserEditDto());
         UUID friendId = createUser(UserUtils.generateUserEditDto());
 
-        mockMvc.perform(post("/users/{userId}/friends?targetId={friendId}", userId, friendId)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/users/{userId}/friends", userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"targetId\" : \"" + friendId + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("\"" + friendId + "\""));
 

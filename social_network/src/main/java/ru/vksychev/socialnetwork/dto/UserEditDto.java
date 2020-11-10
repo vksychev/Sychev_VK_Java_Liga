@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -49,20 +50,18 @@ public class UserEditDto {
     /**
      * Пол
      */
-    @NotEmpty
+    @Max(9)
     Integer sex;
 
     /**
      * Интересы
      */
-    @NotEmpty
     @Size(max = 2500)
     String interests;
 
     /**
      * Город
      */
-    @NotEmpty
     @Size(min = 1, max = 100)
     String city;
 

@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
+import ru.vksychev.socialnetwork.dto.AddFriendDto;
 import ru.vksychev.socialnetwork.dto.UserEditDto;
 import ru.vksychev.socialnetwork.dto.UserListDto;
 import ru.vksychev.socialnetwork.exception.UserNotFoundException;
@@ -75,7 +76,7 @@ public class UserControllerTest {
     @DisplayName("Добавление друга")
     public void addFriendTest() throws UserNotFoundException {
         Mockito.when(userService.addFriend(any(), any())).thenReturn(UUID.randomUUID());
-        userController.addFriend(UUID.randomUUID(), UUID.randomUUID());
+        userController.addFriend(UUID.randomUUID(), new AddFriendDto(UUID.randomUUID()));
 
         verify(userService, times(1)).addFriend(any(), any());
     }

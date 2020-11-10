@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.vksychev.socialnetwork.dto.AddFriendDto;
 import ru.vksychev.socialnetwork.dto.UserEditDto;
 import ru.vksychev.socialnetwork.dto.UserListDto;
 import ru.vksychev.socialnetwork.service.UserService;
@@ -102,13 +103,13 @@ public class UserController {
     /**
      * Добавление пользователя в друзья
      *
-     * @param id       идентификатор пользователя
-     * @param targetId идентификатор друга
+     * @param id     идентификатор пользователя
+     * @param target информация о новой дружбе
      * @return response объект с соответствующим статусом состояния (200, 400, 409)
      */
     @PostMapping("{id}/friends")
-    public UUID addFriend(@PathVariable UUID id, @RequestParam UUID targetId) {
-        return userService.addFriend(id, targetId);
+    public UUID addFriend(@PathVariable UUID id, @RequestBody @Valid AddFriendDto target) {
+        return userService.addFriend(id, target);
     }
 
     /**

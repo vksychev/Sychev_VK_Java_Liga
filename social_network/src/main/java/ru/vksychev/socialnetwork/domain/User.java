@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -66,28 +67,25 @@ public class User {
      * Пол
      * 0-Not known, 1-Male, 2-Female, 9-Not applicable
      */
-    @Column(name = "sex", nullable = false)
-    @NotEmpty
+    @Column(name = "sex")
     private Integer sex;
 
     /**
      * Интересы
      */
     @Column(name = "interests")
-    @NotEmpty
     private String interests;
 
     /**
      * Город
      */
-    @Column(name = "city", nullable = false)
-    @NotEmpty
+    @Column(name = "city")
     private String city;
 
     /**
      * Друзья
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "usr_relationship",
             joinColumns = @JoinColumn(name = "relating_id"),
