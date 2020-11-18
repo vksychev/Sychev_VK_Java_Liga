@@ -1,9 +1,11 @@
 package ru.vksychev.socialnetwork.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vksychev.socialnetwork.domain.User;
 import ru.vksychev.socialnetwork.dto.AddFriendDto;
 import ru.vksychev.socialnetwork.dto.UserEditDto;
@@ -12,7 +14,6 @@ import ru.vksychev.socialnetwork.exception.UserNotFoundException;
 import ru.vksychev.socialnetwork.repository.UserRepository;
 import ru.vksychev.socialnetwork.service.filter.UserFilter;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,18 +22,16 @@ import java.util.stream.Collectors;
  * Сервис для работы с пользователем
  */
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
-    final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
 
     /**
      * Получение всех пользователей
      *
-     * @return список из dto {@link UserEditDto} всех пользователей
+     * @return список из dto {@link UserListDto} всех пользователей
      */
     public Page<UserListDto> findAll(UserFilter filter, Pageable pageable) {
         return userRepository.findAll(filter.toSpecification(), pageable)
@@ -135,7 +134,7 @@ public class UserService {
      *
      * @param id       идентификатор пользователя
      * @param targetId идентификатор друга
-     * @return id
+     * @return id друга
      */
     @Transactional
     public UUID deleteFriend(UUID id, UUID targetId) {

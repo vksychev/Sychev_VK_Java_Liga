@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
@@ -85,13 +86,13 @@ public class User {
     /**
      * Друзья
      */
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "usr_relationship",
             joinColumns = @JoinColumn(name = "relating_id"),
             inverseJoinColumns = @JoinColumn(name = "related_id")
     )
+    @BatchSize(size = 50)
     private List<User> friends;
-
 
 }
